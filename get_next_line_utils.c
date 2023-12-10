@@ -6,13 +6,29 @@
 /*   By: msbai <msbai@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:34:42 by msbai             #+#    #+#             */
-/*   Updated: 2023/12/09 08:37:28 by msbai            ###   ########.fr       */
+/*   Updated: 2023/12/10 23:07:48 by msbai            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*ft_strchr(const char *s, int c)
+{
+	int	i;
 
+	i = 0;
+    if (!s)
+        return (NULL);
+	while (s[i])
+	{
+		if ((char)c == s[i])
+			return ((char *)(&s[i]));
+		i++;
+	}
+	if ((char)c == s[i])
+		return ((char *)(&s[i]));
+	return (NULL);
+}
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	unsigned char	*d;
@@ -49,7 +65,7 @@ char *ft_strjoin1(char *str)
 	ptr[ft_strlen(str)] = '\0';
 	return (ptr);
 }
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char  *s1, char  *s2)
 {
 	size_t	ls1;
 	size_t	ls2;
@@ -67,5 +83,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(ptr, s1, ls1);
 	ft_memcpy(ptr + ls1, s2, ls2);
 	ptr[ls1 + ls2] = '\0';
+	free(s1);
+	free(s2);
 	return (ptr);
 }

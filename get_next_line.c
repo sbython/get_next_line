@@ -6,78 +6,101 @@
 /*   By: msbai <msbai@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:34:39 by msbai             #+#    #+#             */
-/*   Updated: 2023/12/09 19:15:15 by msbai            ###   ########.fr       */
+/*   Updated: 2023/12/10 23:08:14 by msbai            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
+char *get_read(char *save_str, int fd)
 {
-	int	i;
+    char * buffer;
+    int read_n;
 
-	i = 0;
-    ///printf("hadi dkhalt");
-    if (!s)
-        return (NULL);
-	while (s[i])
-	{
-		if ((char)c == s[i])
-			return ((char *)(&s[i]));
-		i++;
-	}
-	if ((char)c == s[i])
-		return ((char *)(&s[i]));
-	return (NULL);
+    read_n = 1;
+    if (!save_str)
+        save_str = ft_strjoin1("");
+    while (!ft_strchr(save_str, '\n') && read_n)
+    {
+        buffer = malloc(BUFFER_SIZE * sizeof(char) + 1 );
+        if(!buffer)
+            return (NULL);
+        read_n = read(fd, buffer, BUFFER_SIZE);
+        if (read_n  == -1)
+        {
+            free(buffer);
+            return (NULL);
+        }
+        buffer[read_n] = '\0';
+        save_str = ft_strjoin(save_str, buffer);
+        if(!save_str)
+            return(NULL);
+    }
+    return (save_str);    
 }
-char *get_line(char *str)
+char *git_line(char * save_str)
 {
-    int i = 0;
-    char *p;
-    while (str[i] && str[i] != '\n')
-       i++; 
-    p = malloc(i+2);
-    if(!p)
-        return (NULL);
-    ft_memcpy(p,str,i+1);
-    p[i+2] = '\0';
-
-    return (p);
+    int i;
+    char *line;
+    i = 0;
+    if (!save_str[i])
+    {
+        free(save_str);
+		return (NULL);
+    }
+    while (save_str[i] != '\n' && save_str[i])
+        i++;
+    line = malloc(i+2);
+    if(!line)
+         {
+        free(save_str);
+		return (NULL);
+        }
+    ft_memcpy(line , save_str, i+1);
+    free(save_str);
+    line[i+2] = '\0';
+    return (line);
 }
-char * rm_line(char *str, char *temp)
+
+
+char *left_lines(char *line, char * save_str)
 {
     int i ;
-
+    int j;
+    char *new_save_str;
     i = 0;
-    while (str[i] && temp[i] && str[i] == temp[i] )
+    j = 0;
+    while (save_str[i] == line[i] && save_str[i] && line[i])
         i++;
-    return (str + i );
+    if(!save_str[i])
+    {
+        free(save_str);
+        return (NULL);
+    }
+    new_save_str = malloc(ft_strlen(save_str) - i +1);
+    if(!new_save_str)
+    {
+        free(save_str);
+        return (NULL);
+    }
+    while (save_str[i])
+        new_save_str[j++] = save_str[i++];
+    new_save_str[j] = '\n';
+    free(save_str);
+    return (new_save_str);
 }
 char *get_next_line(int fd)
 {
-    static char *str ;
-    int len;
-    char * ptr;
-    char *temp;
-    while(!ft_strchr(str, '\n'))
-    {
-        ptr = malloc(sizeof(char) * BUFFER_SIZE + 1);
-        if (!ptr)
-            return (NULL);
-        len = read(fd,ptr, BUFFER_SIZE);
-        if(len <= 0)
-            break;
-        temp = str;
-        str = ft_strjoin(temp, ptr);
-        if(str)
-            return (NULL);
-        free(ptr);
-        free(temp);
-    }
-    ptr = get_line(str);
-    str = rm_line(str, ptr);
-    if(!ptr || !str )
-
+    static char *save_str;
+    char    *line;
+    if(fd == -1 || BUFFER_SIZE <= 0 )
         return (NULL);
-    return (ptr);
+    save_str = get_read(save_str , fd);
+    if(!save_str)
+        return (NULL);
+    line = git_line(save_str);
+    if(!line)
+        return (NULL);
+    save_str= left_lines(line, save_str);
+    return (line);
 }
