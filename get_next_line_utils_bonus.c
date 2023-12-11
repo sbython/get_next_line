@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msbai <msbai@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/07 03:34:42 by msbai             #+#    #+#             */
-/*   Updated: 2023/12/11 02:34:22 by msbai            ###   ########.fr       */
+/*   Created: 2023/12/11 02:43:11 by msbai             #+#    #+#             */
+/*   Updated: 2023/12/11 02:44:12 by msbai            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr(const char *s, int c)
 {

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msbai <msbai@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/07 03:34:39 by msbai             #+#    #+#             */
-/*   Updated: 2023/12/11 02:35:29 by msbai            ###   ########.fr       */
+/*   Created: 2023/12/11 02:43:57 by msbai             #+#    #+#             */
+/*   Updated: 2023/12/11 02:51:11 by msbai            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char *get_read(char *save_str, int fd)
 {
@@ -94,16 +94,16 @@ char *left_lines(char *line, char * save_str)
 }
 char *get_next_line(int fd)
 {
-    static char *save_str;
+    static char *save_str[1024];
     char    *line;
     if(fd < 0 || BUFFER_SIZE <= 0 )
         return (NULL);
-    save_str = get_read(save_str , fd);
-    if(!save_str)
+    save_str[fd] = get_read(save_str[fd] , fd);
+    if(!save_str[fd])
         return (NULL);
-    line = get_line(save_str);
+    line = get_line(save_str[fd]);
     if(!line)
         return (NULL);
-    save_str= left_lines(line, save_str);
+    save_str[fd]= left_lines(line, save_str[fd]);
     return (line);
 }
